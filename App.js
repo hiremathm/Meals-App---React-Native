@@ -5,8 +5,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
 import {enableScreens} from 'react-native-screens'
-
+// Redux
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import mealsReducer from './store/reducers/meals'
 enableScreens()
+
+const rootReducers = combineReducers({
+  meals: mealsReducer
+})
+
+const store = createStore(rootReducers)
 
 const getFonts = () => Font.loadAsync({
   'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
@@ -20,16 +29,16 @@ import AppNavigation from './navigator/AppNavigation'
 export default function App() {
   const [fontsloaded, setFontsLoaded] = useState(false);
 
-if(fontsloaded){
+  if(fontsloaded){
     return (     
-        <AppNavigation />
+        <Provider store = {store}><AppNavigation /></Provider>
     );
   }else{
     return (
-    <AppLoading 
-      startAsync = {getFonts}
-      onFinish = {() => setFontsLoaded(true)}
-    />
+      <AppLoading 
+        startAsync = {getFonts}
+        onFinish = {() => setFontsLoaded(true)}
+      />
     )
   }
 }

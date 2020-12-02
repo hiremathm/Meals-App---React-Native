@@ -1,37 +1,20 @@
 import React from 'react'
 import {Text, View, StyleSheet, Button, Platform, FlatList} from 'react-native'
+import {useSelector} from 'react-redux'
 
 import {CATEGORIES} from '../data/categories'
-import { MEALS } from '../data/meals'
+// import { MEALS } from '../data/meals'
 import Colors from '../constants/Colors'
-import MealItem from '../components/MealItem'
+import MealList from '../components/MealList'
 
 const CategoryMealsListScreen = (props) => {
 	const categoryId = props.navigation.getParam('categoryId')
 
-	const meals = MEALS.filter(meal => meal.categoryIds.includes(categoryId))
+	// const meals = MEALS.filter(meal => meal.categoryIds.includes(categoryId))
 
-	const renderMealItem = itemData => {
-		return <MealItem 
-			title = {itemData.item.title} 
-			complexity = {itemData.item.complexity} 
-			affordability = {itemData.item.affordability} 
-			duration = {itemData.item.duration} 
-			image = {itemData.item.imageUrl}
-			onSelectMeal = {() => {props.navigation.navigate({routeName: 'DetailsScreen', params: {mealId: itemData.item.id}})}}
-		/>
-	}
+	const meals = useSelector(state => state.meals.filteredMeals)
 	
-	return(
-		<View style = {styles.screen}>
-			<FlatList 
-				data = {meals} 
-				keyExtractor = {(item, index) => item.id} 
-				renderItem = {renderMealItem}
-				style = {{width: '100%'}}
-			/>
-		</View>
-	)
+	return <MealList listData = {meals} navigation = {props.navigation}/>
 }
 
 CategoryMealsListScreen.navigationOptions = (navigationData) => {
